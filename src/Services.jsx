@@ -65,7 +65,7 @@ const services = [
 
 const Services = () => {
   const controls = useAnimation();
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+  const [ref, inView] = useInView({ threshold: 0.2 });
 
   useEffect(() => {
     if (inView) {
@@ -127,7 +127,7 @@ const Services = () => {
           {services.map((service, index) => (
             <motion.div
               key={service.id}
-              className="bg-white shadow-lg rounded-xl p-6 transform hover:scale-105 hover:shadow-xl transition duration-300"
+              className="bg-white shadow-lg rounded-xl p-6 transform hover:scale-105 hover:shadow-2xl transition duration-300"
               variants={fadeIn}
               initial="hidden"
               animate={controls}

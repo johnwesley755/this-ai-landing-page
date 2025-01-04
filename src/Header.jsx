@@ -113,7 +113,7 @@ const Header = () => {
 
       {/* Mobile Sidebar */}
       <motion.div
-        className={`fixed top-0 left-0 w-64 h-full bg-gray-100 shadow-xl transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 w-64 h-full bg-gradient-to-b from-blue-600 via-blue-500 to-blue-400 shadow-xl transform transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         variants={sidebarVariants}
@@ -121,27 +121,27 @@ const Header = () => {
         animate={isSidebarOpen ? "visible" : "hidden"}
       >
         {/* Sidebar Header */}
-        <div className="flex justify-between items-center p-5 bg-blue-600 text-white">
+        <div className="flex justify-between items-center p-5 bg-blue-700 text-white">
           <h2 className="text-xl font-bold">This-AI</h2>
           <motion.div
             whileTap={{ scale: 0.9 }}
             onClick={toggleSidebar}
             className="cursor-pointer"
           >
-            <FaTimes className="text-2xl" />
+            <FaTimes className="text-2xl text-white" />
           </motion.div>
         </div>
 
         {/* Sidebar Links */}
-        <nav className="flex flex-col space-y-4 p-6">
+        <nav className="flex flex-col space-y-6 p-6 text-white">
           {["Home", "About", "Services", "Contact"].map((item) => (
             <ScrollLink
               key={item}
               to={item.toLowerCase()}
               smooth={true}
               duration={500}
-              onClick={closeSidebar}
-              className="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 cursor-pointer"
+              onClick={toggleSidebar}
+              className="text-lg hover:text-blue-200 hover:bg-blue-800 p-2 rounded-lg transition duration-300 cursor-pointer"
             >
               {item}
             </ScrollLink>
@@ -149,14 +149,14 @@ const Header = () => {
         </nav>
 
         {/* Social Media Icons */}
-        <div className="flex justify-center space-x-4 mt-8 text-gray-600">
+        <div className="flex justify-center space-x-4 mt-8 text-white">
           <a
             href="#"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-blue-500 transition duration-300"
           >
-            <FaFacebook size={24} />
+            <FaFacebook size={28} />
           </a>
           <a
             href="#"
@@ -164,7 +164,7 @@ const Header = () => {
             rel="noopener noreferrer"
             className="hover:text-blue-500 transition duration-300"
           >
-            <FaTwitter size={24} />
+            <FaTwitter size={28} />
           </a>
           <a
             href="#"
@@ -172,7 +172,7 @@ const Header = () => {
             rel="noopener noreferrer"
             className="hover:text-blue-500 transition duration-300"
           >
-            <FaLinkedin size={24} />
+            <FaLinkedin size={28} />
           </a>
         </div>
       </motion.div>
