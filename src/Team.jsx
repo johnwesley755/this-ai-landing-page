@@ -40,15 +40,15 @@ const teamMembers = [
   {
     id: 5,
     name: "Abina Sri",
-    role: "Software Engineer",
+    role: "Developer",
     bio: "Crafting efficient and scalable code for cutting-edge solutions.",
     image: abinaImg,
   },
   {
     id: 6,
     name: "Harshini",
-    role: "Marketing Head",
-    bio: "Building strategic campaigns that connect with our audience.",
+    role: "Developer",
+    bio: "Crafting efficient and scalable code for cutting-edge solutions.",
     image: harshiniImg,
   },
 ];
