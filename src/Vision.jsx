@@ -1,10 +1,29 @@
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 const Vision = () => {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.2 });
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    } else {
+      controls.start("hidden");
+    }
+  }, [controls, inView]);
+
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 1 } },
+  };
+
   return (
     <section
       id="about"
       className="relative py-20 px-6 bg-gradient-to-b from-white to-gray-100 text-gray-900 overflow-hidden"
+      ref={ref}
     >
       {/* Decorative Shapes */}
       <motion.div
@@ -40,17 +59,18 @@ const Vision = () => {
         <div className="lg:w-1/2 text-center lg:text-left mb-10 lg:mb-0">
           <motion.h2
             className="text-4xl md:text-6xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
+            variants={fadeIn}
+            initial="hidden"
+            animate={controls}
           >
             Empowering Education with AI
           </motion.h2>
           <motion.p
             className="text-lg md:text-xl mb-6 text-gray-700"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
+            variants={fadeIn}
+            initial="hidden"
+            animate={controls}
+            transition={{ delay: 0.2 }}
           >
             At This-AI, we aim to reshape education by leveraging the power of
             artificial intelligence. Our mission is to provide accessible,
@@ -59,9 +79,10 @@ const Vision = () => {
           </motion.p>
           <motion.div
             className="space-y-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
+            variants={fadeIn}
+            initial="hidden"
+            animate={controls}
+            transition={{ delay: 0.3 }}
           >
             <p className="text-gray-600">
               From personalized learning experiences to AI-driven analytics, we
@@ -76,10 +97,11 @@ const Vision = () => {
           <motion.button
             className="mt-6 bg-gradient-to-r from-blue-400 to-blue-600 text-white px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transform transition duration-300 hover:scale-105"
             whileHover={{ scale: 1.1 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.4 }}
             whileTap={{ scale: 0.9, y: 5 }}
+            variants={fadeIn}
+            initial="hidden"
+            animate={controls}
+            transition={{ delay: 0.4 }}
           >
             Learn More
           </motion.button>
@@ -89,9 +111,10 @@ const Vision = () => {
         <div className="lg:w-1/2 flex justify-center lg:justify-end relative">
           <motion.div
             className="relative group"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.4 }}
+            variants={fadeIn}
+            initial="hidden"
+            animate={controls}
+            transition={{ delay: 0.4 }}
           >
             <motion.img
               src="https://www.ictesolutions.com.au/media/1953/vision.jpg?anchor=center&mode=crop&width=1200&height=630&rnd=132396685480000000"

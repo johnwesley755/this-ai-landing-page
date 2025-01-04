@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import {
   FaCloud,
   FaShieldAlt,
@@ -9,6 +9,8 @@ import {
   FaRobot,
   FaChartBar,
 } from "react-icons/fa";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 const services = [
   {
@@ -62,8 +64,28 @@ const services = [
 ];
 
 const Services = () => {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    } else {
+      controls.start("hidden");
+    }
+  }, [controls, inView]);
+
+  const fadeIn = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
   return (
-    <div className="relative bg-gradient-to-br from-blue-50 via-white to-indigo-100 py-20 overflow-hidden" id="services">
+    <div
+      ref={ref}
+      className="relative bg-gradient-to-br from-blue-50 via-white to-indigo-100 py-20 overflow-hidden"
+      id="services"
+    >
       {/* Background Shapes */}
       <motion.div
         className="absolute top-[-10%] left-[-15%] w-[300px] h-[300px] bg-gradient-to-r from-purple-400 to-indigo-500 rounded-full filter blur-3xl opacity-50"
@@ -80,25 +102,36 @@ const Services = () => {
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
+          <motion.h2
+            className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600"
+            variants={fadeIn}
+            initial="hidden"
+            animate={controls}
+          >
             Our Services
-          </h2>
-          <p className="text-lg text-gray-700 mt-4">
+          </motion.h2>
+          <motion.p
+            className="text-lg text-gray-700 mt-4"
+            variants={fadeIn}
+            initial="hidden"
+            animate={controls}
+            transition={{ delay: 0.2 }}
+          >
             Discover how we empower your business with cutting-edge solutions
             and tailored expertise.
-          </p>
+          </motion.p>
         </div>
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 relative">
-          {services.map((service) => (
+          {services.map((service, index) => (
             <motion.div
               key={service.id}
               className="bg-white shadow-lg rounded-xl p-6 transform hover:scale-105 hover:shadow-xl transition duration-300"
-              whileHover={{ scale: 1.05 }}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: service.id * 0.1 }}
+              variants={fadeIn}
+              initial="hidden"
+              animate={controls}
+              transition={{ delay: 0.2 * index }}
             >
               <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-3xl mb-4">
                 <service.Icon />
@@ -110,8 +143,6 @@ const Services = () => {
             </motion.div>
           ))}
         </div>
-
-
       </div>
     </div>
   );

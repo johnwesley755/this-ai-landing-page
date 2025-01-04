@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   FaBars,
@@ -10,18 +10,42 @@ import {
 } from "react-icons/fa";
 import { Link as ScrollLink } from "react-scroll";
 import logoImg from "../src/assets/THIS-AI.svg";
+import { useInView } from "react-intersection-observer";
 
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { ref, inView } = useInView({ threshold: 0.2 });
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
 
+  const logoVariants = {
+    hidden: { opacity: 0, y: -30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  };
+
+  const navbarVariants = {
+    hidden: { opacity: 0, y: -30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.2 } },
+  };
+
+  const sidebarVariants = {
+    hidden: { opacity: 0, x: -300 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
+  };
+
   return (
-    <header className="fixed top-0 left-0 w-full bg-white z-50 shadow-md">
+    <header
+      className="fixed top-0 left-0 w-full bg-white z-50 shadow-md"
+      ref={ref}
+    >
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         {/* Logo */}
-        <div>
+        <motion.div
+          variants={logoVariants}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+        >
           <ScrollLink
             to="home"
             smooth={true}
@@ -30,10 +54,15 @@ const Header = () => {
           >
             <img src={logoImg} alt="This-AI Logo" className="w-32 h-auto" />
           </ScrollLink>
-        </div>
+        </motion.div>
 
         {/* Desktop Navbar */}
-        <div className="hidden lg:flex items-center space-x-8">
+        <motion.div
+          variants={navbarVariants}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          className="hidden lg:flex items-center space-x-8"
+        >
           {/* Navigation Links */}
           <nav className="flex space-x-6 text-gray-700 font-semibold">
             {["Home", "About", "Services", "Contact"].map((item) => (
@@ -68,7 +97,7 @@ const Header = () => {
               Get Started
             </motion.button>
           </a>
-        </div>
+        </motion.div>
 
         {/* Hamburger Icon (Mobile) */}
         <div className="lg:hidden">
@@ -87,6 +116,9 @@ const Header = () => {
         className={`fixed top-0 left-0 w-64 h-full bg-gray-100 shadow-xl transform transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
+        variants={sidebarVariants}
+        initial="hidden"
+        animate={isSidebarOpen ? "visible" : "hidden"}
       >
         {/* Sidebar Header */}
         <div className="flex justify-between items-center p-5 bg-blue-600 text-white">

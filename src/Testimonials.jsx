@@ -1,5 +1,7 @@
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 const testimonials = [
   {
@@ -52,56 +54,110 @@ const testimonials = [
   },
 ];
 
-const Testimonials = () => (
-  <div className="relative bg-gradient-to-br from-gray-50 to-blue-50 text-gray-900 py-20">
-    {/* Gradient Shapes */}
-    <div className="absolute inset-0 z-0">
-      <div className="absolute top-0 left-1/3 transform -translate-x-1/2 bg-gradient-to-r from-purple-400 to-indigo-400 w-96 h-96 rounded-full opacity-20 blur-3xl"></div>
-      <div className="absolute bottom-0 right-1/3 transform translate-x-1/2 bg-gradient-to-l from-yellow-400 to-orange-400 w-80 h-80 rounded-full opacity-20 blur-3xl"></div>
-    </div>
+const Testimonials = () => {
+  const { ref, inView } = useInView({ threshold: 0.2 }); // Detect if the section is in view
+  const controls = useAnimation();
 
-    {/* Main Content */}
-    <div className="container mx-auto px-6 relative z-10">
-      <div className="text-center mb-16">
-        <h2 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-indigo-600">
-          What Our Users Say
-        </h2>
-        <p className="text-lg md:text-xl mt-4 text-gray-700">
-          Hear from those who have experienced the transformative power of
-          This-AI in education.
-        </p>
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    } else {
+      controls.start("hidden");
+    }
+  }, [inView, controls]);
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
+  return (
+    <div
+      ref={ref}
+      className="relative bg-gradient-to-br from-gray-50 to-blue-50 text-gray-900 py-20"
+    >
+      {/* Background Shapes */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-0 left-1/3 transform -translate-x-1/2 bg-gradient-to-r from-purple-400 to-indigo-400 w-96 h-96 rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/3 transform translate-x-1/2 bg-gradient-to-l from-yellow-400 to-orange-400 w-80 h-80 rounded-full opacity-20 blur-3xl"></div>
       </div>
 
-      {/* Testimonials Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-        {testimonials.map((testimonial) => (
-          <motion.div
-            key={testimonial.id}
-            className="bg-white rounded-lg shadow-xl p-6 space-y-4 relative"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
+      {/* Main Content */}
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <motion.h2
+            className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-indigo-600"
+            initial="hidden"
+            animate={controls}
+            variants={{
+              hidden: { opacity: 0, y: -20 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+            }}
           >
-            <FaQuoteLeft className="absolute top-4 left-4 text-gray-300 text-4xl" />
-            <FaQuoteRight className="absolute bottom-4 right-4 text-gray-300 text-4xl" />
-            <p className="text-lg font-medium text-gray-700 italic">{`"${testimonial.testimonial}"`}</p>
-            <div className="flex items-center space-x-4">
-              <img
-                src={testimonial.image}
-                alt={testimonial.name}
-                className="w-16 h-16 rounded-full object-cover"
-              />
-              <div>
-                <h3 className="text-xl font-semibold text-indigo-500">
-                  {testimonial.name}
-                </h3>
-                <p className="text-gray-600">{testimonial.role}</p>
+            What Our Users Say
+          </motion.h2>
+          <motion.p
+            className="text-lg md:text-xl mt-4 text-gray-700"
+            initial="hidden"
+            animate={controls}
+            variants={{
+              hidden: { opacity: 0, y: -20 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { delay: 0.3, duration: 0.6 },
+              },
+            }}
+          >
+            Hear from those who have experienced the transformative power of
+            This-AI in education.
+          </motion.p>
+        </div>
+
+        {/* Testimonials Grid */}
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+          initial="hidden"
+          animate={controls}
+          variants={{
+            visible: {
+              transition: {
+                staggerChildren: 0.2,
+              },
+            },
+          }}
+        >
+          {testimonials.map((testimonial) => (
+            <motion.div
+              key={testimonial.id}
+              className="bg-white rounded-lg shadow-xl p-6 space-y-4 relative"
+              variants={cardVariants}
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+            >
+              <FaQuoteLeft className="absolute top-4 left-4 text-gray-300 text-4xl" />
+              <FaQuoteRight className="absolute bottom-4 right-4 text-gray-300 text-4xl" />
+              <p className="text-lg font-medium text-gray-700 italic">{`"${testimonial.testimonial}"`}</p>
+              <div className="flex items-center space-x-4">
+                <img
+                  src={testimonial.image}
+                  alt={testimonial.name}
+                  className="w-16 h-16 rounded-full object-cover"
+                />
+                <div>
+                  <h3 className="text-xl font-semibold text-indigo-500">
+                    {testimonial.name}
+                  </h3>
+                  <p className="text-gray-600">{testimonial.role}</p>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Testimonials;
